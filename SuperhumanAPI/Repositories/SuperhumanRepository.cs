@@ -9,6 +9,7 @@ namespace SuperhumanAPI.Repositories
 {
     public class SuperhumanRepository : ISuperhumanRepository
     {
+        //This is an example of dependency injection in the api.
         private readonly SuperhumanContext _context;
         public SuperhumanRepository(SuperhumanContext context)
         {

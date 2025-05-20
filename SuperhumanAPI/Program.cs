@@ -10,6 +10,7 @@ namespace SuperhumanAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            //This is an example of dependency injection in the api.
             builder.Services.AddDbContext<SuperhumanContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
                 );
@@ -28,6 +29,7 @@ namespace SuperhumanAPI
             }
             );
 
+            //This is an example of dependency injection in the api.
             builder.Services.AddScoped<ISuperhumanRepository, SuperhumanRepository>();
 
             builder.Services.AddControllers();
