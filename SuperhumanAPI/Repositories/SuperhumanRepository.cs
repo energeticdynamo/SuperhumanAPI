@@ -67,9 +67,10 @@ namespace SuperhumanAPI.Repositories
             }
         }
 
-        public async Task<IEnumerable<Superhuman>> GetAllSuperhumansAsync()
+        public async Task<PagedResult<Superhuman>> GetAllSuperhumansAsync(int pageNumber, int pageSize)
         {
             var superhumans = new List<Superhuman>();
+            int totalCount = 0;
             var connectionString = _context.Database.GetConnectionString();
 
             using (var connection = new SqlConnection(connectionString))
@@ -78,6 +79,9 @@ namespace SuperhumanAPI.Repositories
                 using (var command = new SqlCommand("GetSuperhumanRecords", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@PageNumber", pageNumber);
+                    command.Parameters.AddWithValue("@PageSize", pageSize);
 
                     using (var reader = await command.ExecuteReaderAsync())
                     {
@@ -94,13 +98,18 @@ namespace SuperhumanAPI.Repositories
                                 Ranking = reader.GetInt32(6),
                                 TeamName = reader.IsDBNull(7) ? null : reader.GetString(7),
                             };
+
+                            if (totalCount == 0)
+                            {
+                                totalCount = reader.GetInt32(reader.GetOrdinal("TotalCount"));
+                            }
                             superhumans.Add(superhuman);
                         }
                     }
                 }
             }
 
-            return superhumans;
+            return new PagedResult<Superhuman> { Items = superhumans, TotalCount = totalCount };
         }
 
         public async Task<Superhuman> GetSuperhumanByIdAsync(int id)

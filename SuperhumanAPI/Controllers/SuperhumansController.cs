@@ -1,6 +1,5 @@
 ﻿using SuperhumanAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using SuperhumanAPI.Data;
 using SuperhumanAPI.Repositories;
 
 namespace SuperhumanAPI.Controllers
@@ -17,9 +16,9 @@ namespace SuperhumanAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Superhuman>>> GetAllSuperhumansAsync()
+        public async Task<ActionResult<PagedResult<Superhuman>>> GetAllSuperhumansAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            return Ok(await _superhumanRepository.GetAllSuperhumansAsync());
+            return Ok(await _superhumanRepository.GetAllSuperhumansAsync(pageNumber, pageSize));
         }
 
         [HttpGet("{id}")]
