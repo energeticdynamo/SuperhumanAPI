@@ -130,7 +130,7 @@ namespace SuperhumanAPI.Repositories
                                 PrimaryPower = reader.GetString(4),
                                 SecondaryPower = reader.IsDBNull(5) ? null : reader.GetString(5),
                                 Ranking = reader.GetInt32(6),
-                                TeamName = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                TeamId = reader.GetInt32(7),
                             };
                         }
                     }

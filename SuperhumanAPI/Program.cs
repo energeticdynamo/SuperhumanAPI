@@ -11,10 +11,9 @@ namespace SuperhumanAPI
             var builder = WebApplication.CreateBuilder(args);
 
             //This is an example of dependency injection in the api.
-            builder.Services.AddDbContext<SuperhumanContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-                );
-            
+
+            builder.Services.AddProjectDbContexts(builder.Configuration);
+
             builder.Services.AddControllers();
 
             builder.Services.AddCors(options =>
