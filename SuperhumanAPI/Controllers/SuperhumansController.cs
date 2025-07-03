@@ -37,6 +37,16 @@ namespace SuperhumanAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Superhuman>> CreateSuperhuman(Superhuman superhuman)
         {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
+
+            if (superhuman == null)
+            {
+                return BadRequest("Superhuman cannot be null");
+            }
+
             await _superhumanRepository.AddSuperhumanAsync(superhuman);
             return CreatedAtAction(nameof(GetSuperhumanById), new {id = superhuman.SuperhumanId}, superhuman);
         }
@@ -60,6 +70,17 @@ namespace SuperhumanAPI.Controllers
             {
                 return BadRequest();
             }
+
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest();
+            }
+
+            if (superhuman == null)
+            {
+                return BadRequest("Superhuman cannot be null");
+            }
+
             var existingSuperhuman = await _superhumanRepository.GetSuperhumanByIdAsync(id);
             if (existingSuperhuman == null)
             {
