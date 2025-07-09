@@ -15,7 +15,7 @@ namespace SuperhumanAPI.Repositories
         {
             _context = context;
         }
-        public async Task AddSuperhumanAsync(Superhuman superhuman)
+        public async Task AddSuperhumanAsync(SuperhumanDTO superhuman)
         {
             var connectionString = _context.Database.GetConnectionString();
 
@@ -67,9 +67,9 @@ namespace SuperhumanAPI.Repositories
             }
         }
 
-        public async Task<PagedResult<Superhuman>> GetAllSuperhumansAsync(int pageNumber, int pageSize)
+        public async Task<PagedResult<SuperhumanDTO>> GetAllSuperhumansAsync(int pageNumber, int pageSize)
         {
-            var superhumans = new List<Superhuman>();
+            var superhumans = new List<SuperhumanDTO>();
             int totalCount = 0;
             var connectionString = _context.Database.GetConnectionString();
 
@@ -87,7 +87,7 @@ namespace SuperhumanAPI.Repositories
                     {
                         while (await reader.ReadAsync())
                         {
-                            var superhuman = new Superhuman
+                            var superhuman = new SuperhumanDTO
                             {
                                 SuperhumanId = reader.GetInt32(0),
                                 FirstName = reader.GetString(1),
@@ -109,12 +109,12 @@ namespace SuperhumanAPI.Repositories
                 }
             }
 
-            return new PagedResult<Superhuman> { Items = superhumans, TotalCount = totalCount };
+            return new PagedResult<SuperhumanDTO> { Items = superhumans, TotalCount = totalCount };
         }
 
-        public async Task<Superhuman> GetSuperhumanByIdAsync(int id)
+        public async Task<SuperhumanDTO> GetSuperhumanByIdAsync(int id)
         {
-            var superhuman = new Superhuman();
+            var superhuman = new SuperhumanDTO();
             var connectionString = _context.Database.GetConnectionString();
 
             using (var connection = new SqlConnection(connectionString))
@@ -130,7 +130,7 @@ namespace SuperhumanAPI.Repositories
                     {
                         while (await reader.ReadAsync())
                         {
-                            superhuman = new Superhuman
+                            superhuman = new SuperhumanDTO
                             {
                                 SuperhumanId = reader.GetInt32(0),
                                 FirstName = reader.GetString(1),
@@ -149,7 +149,7 @@ namespace SuperhumanAPI.Repositories
             return superhuman;
         }
 
-        public async Task UpdateSuperhumanAsync(Superhuman superhuman)
+        public async Task UpdateSuperhumanAsync(SuperhumanDTO superhuman)
         {
             var connectionString = _context.Database.GetConnectionString();
 
