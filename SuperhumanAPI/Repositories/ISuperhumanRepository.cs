@@ -4,10 +4,10 @@ namespace SuperhumanAPI.Repositories
 {
     public interface ISuperhumanRepository
     {
-        Task<PagedResult<SuperhumanDTO>> GetAllSuperhumansAsync(int pageNumber, int pageSize);
-        Task<SuperhumanDTO> GetSuperhumanByIdAsync(int id);
-        Task AddSuperhumanAsync(SuperhumanDTO superhuman);
-        Task UpdateSuperhumanAsync(SuperhumanDTO superhuman);
+        Task<PagedResult<Superhuman>> GetAllSuperhumansAsync(int pageNumber, int pageSize);
+        Task<Superhuman> GetSuperhumanByIdAsync(int id);
+        Task AddSuperhumanAsync(Superhuman superhuman);
+        Task UpdateSuperhumanAsync(Superhuman superhuman);
         Task<bool> DeleteSuperhumanByIdAsync(int id);
     }
 }

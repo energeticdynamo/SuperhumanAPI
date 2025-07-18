@@ -11,6 +11,6 @@ namespace SuperhumanAPI.Data
         {
         }
 
-        public DbSet<SuperhumanDTO> Superhumans { get; set; }
+        public DbSet<Superhuman> Superhumans { get; set; }
     }
 }

@@ -16,13 +16,13 @@ namespace SuperhumanAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedResult<SuperhumanDTO>>> GetAllSuperhumansAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<PagedResult<Superhuman>>> GetAllSuperhumansAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(await _superhumanRepository.GetAllSuperhumansAsync(pageNumber, pageSize));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<SuperhumanDTO>> GetSuperhumanById(int id)
+        public async Task<ActionResult<Superhuman>> GetSuperhumanById(int id)
         {
             var superhuman = await _superhumanRepository.GetSuperhumanByIdAsync(id);
 
@@ -35,7 +35,7 @@ namespace SuperhumanAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<SuperhumanDTO>> CreateSuperhuman(SuperhumanDTO superhuman)
+        public async Task<ActionResult<Superhuman>> CreateSuperhuman(Superhuman superhuman)
         {
             if (ModelState.IsValid == false)
             {
@@ -64,7 +64,7 @@ namespace SuperhumanAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateSuperhuman(int id, SuperhumanDTO superhuman)
+        public async Task<ActionResult> UpdateSuperhuman(int id, Superhuman superhuman)
         {
             if (id != superhuman.SuperhumanId)
             {

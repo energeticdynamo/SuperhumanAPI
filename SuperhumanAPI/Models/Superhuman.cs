@@ -2,7 +2,7 @@
 
 namespace SuperhumanAPI.Models
 {
-    public class SuperhumanDTO
+    public class Superhuman
     {
         public int SuperhumanId { get; set; }
 
