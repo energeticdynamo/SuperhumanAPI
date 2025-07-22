@@ -18,20 +18,17 @@ namespace SuperhumanAPI
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("MyCors", builder =>
+                options.AddPolicy("MyCorsPolicy", policyBuilder =>
                 {
-                    builder.WithOrigins("http://localhost:4200/")
+                    policyBuilder.WithOrigins("http://192.168.1.220:8080", "http://localhost:4200/")
                     .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowAnyOrigin();
+                    .AllowAnyMethod();
                 });
             }
             );
 
             //This is an example of dependency injection in the api.
             builder.Services.AddScoped<ISuperhumanRepository, SuperhumanRepository>();
-
-            builder.Services.AddControllers();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -48,7 +45,7 @@ namespace SuperhumanAPI
                 });
             }
 
-            app.UseCors("MyCors");
+            app.UseCors("MyCorsPolicy");
 
             app.MapControllers();
 
