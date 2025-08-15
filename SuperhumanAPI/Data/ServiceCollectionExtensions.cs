@@ -14,6 +14,9 @@ namespace SuperhumanAPI.Data
             services.AddDbContext<TeamContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddDbContext<MutantContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
             services.AddScoped<ITeams, TeamsRepository>();
 
             // Add more contexts here as needed

@@ -29,6 +29,10 @@ namespace SuperhumanAPI
 
             //This is an example of dependency injection in the api.
             builder.Services.AddScoped<ISuperhumanRepository, SuperhumanRepository>();
+            builder.Services.AddScoped<IMutantRepository, MutantRepository>();
+            builder.Services.AddDbContext<MutantContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+            );
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
