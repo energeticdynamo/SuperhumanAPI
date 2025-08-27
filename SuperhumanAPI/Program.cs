@@ -2,58 +2,58 @@ using Microsoft.EntityFrameworkCore;
 using SuperhumanAPI.Data;
 using SuperhumanAPI.Repositories;
 
-namespace SuperhumanAPI
+var builder = WebApplication.CreateBuilder(args);
+
+// 1. DEFINE a CORS policy
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:4200") // The origin of your Angular app
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
 
-            //This is an example of dependency injection in the api.
 
-            builder.Services.AddProjectDbContexts(builder.Configuration);
+// Add services to the container.
+builder.Services.AddDbContext<SuperhumanContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<MutantContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<TeamContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddControllers();
 
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("MyCorsPolicy", policyBuilder =>
-                {
-                    policyBuilder.WithOrigins("http://192.168.1.220:8080", "http://localhost:4200/")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-                });
-            }
-            );
+builder.Services.AddScoped<ISuperhumanRepository, SuperhumanRepository>();
+builder.Services.AddScoped<IMutantRepository, MutantRepository>();
+builder.Services.AddScoped<ITeams, TeamsRepository>();
 
-            //This is an example of dependency injection in the api.
-            builder.Services.AddScoped<ISuperhumanRepository, SuperhumanRepository>();
-            builder.Services.AddScoped<IMutantRepository, MutantRepository>();
-            builder.Services.AddDbContext<MutantContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-            );
 
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-            var app = builder.Build();
+var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SuperhumanAPI v1");
-                    c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
-                });
-            }
-
-            app.UseCors("MyCorsPolicy");
-
-            app.MapControllers();
-
-            app.Run();
-        }
-    }
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+
+// 2. APPLY the CORS policy here, before Authorization and Controllers
+app.UseCors(MyAllowSpecificOrigins);
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
