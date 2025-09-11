@@ -18,13 +18,13 @@ namespace SuperhumanAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<PagedResult<Superhuman>>> GetAllSuperhumansAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            return Ok(await _superhumanRepository.GetAllSuperhumansAsync(pageNumber, pageSize));
+            return Ok(await _superhumanRepository.GetAllAsync(pageNumber, pageSize));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Superhuman>> GetSuperhumanById(int id)
         {
-            var superhuman = await _superhumanRepository.GetSuperhumanByIdAsync(id);
+            var superhuman = await _superhumanRepository.GetByIdAsync(id);
 
             if (superhuman == null)
             {
@@ -37,57 +37,43 @@ namespace SuperhumanAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Superhuman>> CreateSuperhuman(Superhuman superhuman)
         {
-            if (ModelState.IsValid == false)
+            if (!ModelState.IsValid == false || superhuman == null)
             {
                 return BadRequest();
             }
 
-            if (superhuman == null)
-            {
-                return BadRequest("Superhuman cannot be null");
-            }
+            
 
-            await _superhumanRepository.AddSuperhumanAsync(superhuman);
-            return CreatedAtAction(nameof(GetSuperhumanById), new {id = superhuman.SuperhumanId}, superhuman);
+            await _superhumanRepository.AddAsync(superhuman);
+            return CreatedAtAction(nameof(GetSuperhumanById), new {id = superhuman.Id}, superhuman);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteSuperhuman(int id)
         {
-            var superhuman = await _superhumanRepository.GetSuperhumanByIdAsync(id);
-            if (superhuman == null)
+            var success = await _superhumanRepository.DeleteByIdAsync(id);
+            if (!success)
             {
                 return NotFound();
             }
-            await _superhumanRepository.DeleteSuperhumanByIdAsync(id);
             return NoContent();
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateSuperhuman(int id, Superhuman superhuman)
         {
-            if (id != superhuman.SuperhumanId)
+            if (id != superhuman.Id)
             {
                 return BadRequest();
             }
 
-            if (ModelState.IsValid == false)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            if (superhuman == null)
-            {
-                return BadRequest("Superhuman cannot be null");
-            }
-
-            var existingSuperhuman = await _superhumanRepository.GetSuperhumanByIdAsync(id);
-            if (existingSuperhuman == null)
-            {
-                return NotFound();
-            }
-            await _superhumanRepository.UpdateSuperhumanAsync(superhuman);
-            return CreatedAtAction(nameof(GetSuperhumanById), new { id = superhuman.SuperhumanId }, superhuman);
+            await _superhumanRepository.UpdateAsync(superhuman);
+            return CreatedAtAction(nameof(GetSuperhumanById), new { id = superhuman.Id }, superhuman);
         }
     }
 }

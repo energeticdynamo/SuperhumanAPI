@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SuperhumanAPI.Models
 {
-    public record Mutant : IEquatable<Mutant>
+    public record Mutant : IEquatable<Mutant>, IEntity
     {
         [Key]
-        public int MutantId { get; init; }
+        public int Id { get; set; } // Changed from 'init' to 'set' to satisfy IEntity
         public string? FirstName { get; init; }
         public string? LastName { get; init; }
         public string? MutantName { get; init; }

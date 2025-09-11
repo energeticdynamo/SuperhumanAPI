@@ -18,13 +18,13 @@ namespace SuperhumanAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<PagedResult<Mutant>>> GetAllMutantsAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            return Ok(await _mutantRepository.GetAllMutantsAsync(pageNumber, pageSize));
+            return Ok(await _mutantRepository.GetAllAsync(pageNumber, pageSize));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Mutant>> GetMutantById(int id)
         {
-            var mutant = await _mutantRepository.GetMutantByIdAsync(id);
+            var mutant = await _mutantRepository.GetByIdAsync(id);
 
             if (mutant == null)
             {
@@ -37,50 +37,44 @@ namespace SuperhumanAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Mutant>> CreateMutant(Mutant mutant)
         {
-            if (ModelState.IsValid == false)
+            if (!ModelState.IsValid || mutant == null)
             {
                 return BadRequest();
             }
 
-            if (mutant == null)
-            {
-                return BadRequest("Mutant cannot be null");
-            }
-
-            await _mutantRepository.AddMutantAsync(mutant);
-            return CreatedAtAction(nameof(GetMutantById), new {id = mutant.MutantId}, mutant);
+            // Call the standard method
+            await _mutantRepository.AddAsync(mutant);
+            // Use the standard 'Id' property
+            return CreatedAtAction(nameof(GetMutantById), new { id = mutant.Id }, mutant);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteMutant(int id)
         {
-            var mutant = await _mutantRepository.GetMutantByIdAsync(id);
-            if (mutant == null)
+            // Use the standard 'DeleteByIdAsync'
+            var success = await _mutantRepository.DeleteByIdAsync(id);
+            if (!success)
             {
                 return NotFound();
             }
-            
-            await _mutantRepository.DeleteMutantByMutantIdAsync(id);            
             return NoContent();
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateMutant(int id, Mutant mutant)
         {
-            if (id != mutant.MutantId)
+            // Use the standard 'Id' property
+            if (id != mutant.Id)
             {
                 return BadRequest("Mutant ID mismatch");
             }
-            if (ModelState.IsValid == false)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            var existingMutant = await _mutantRepository.GetMutantByIdAsync(id);
-            if (existingMutant == null)
-            {
-                return NotFound();
-            }
-            await _mutantRepository.UpdateMutantAsync(mutant);
+
+            // Call the standard method
+            await _mutantRepository.UpdateAsync(mutant);
             return NoContent();
         }
     }

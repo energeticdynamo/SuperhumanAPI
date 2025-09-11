@@ -2,9 +2,9 @@
 
 namespace SuperhumanAPI.Models
 {
-    public class Superhuman
+    public class Superhuman : IEntity
     {
-        public int SuperhumanId { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage ="First Name is required")]
         public string FirstName { get; set; } = string.Empty;
