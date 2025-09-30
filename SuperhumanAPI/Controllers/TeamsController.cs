@@ -18,7 +18,7 @@ namespace SuperhumanAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Teams>>> GetAllTeamsAsync()
         {
-            return Ok(await _teamsRepository.GetAllActiveTeamsAsync());
+            
         }
         // Additional methods for creating, updating, and deleting teams can be added here
     }

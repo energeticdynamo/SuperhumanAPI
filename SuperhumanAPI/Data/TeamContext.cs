@@ -9,6 +9,6 @@ namespace SuperhumanAPI.Data
             : base(options)
         {
         }
-        public DbSet<Teams> Teams { get; set; }
+        public DbSet<Teams> Teams { get; set; } = null!;
     }
 }
