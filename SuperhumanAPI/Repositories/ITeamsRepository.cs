@@ -2,7 +2,7 @@
 
 namespace SuperhumanAPI.Repositories
 {
-    public interface ITeams
+    public interface ITeamsRepository
     {
         public Task<PagedResult<Teams>> GetAllActiveTeamsAsync(int pageNumber, int pageSize);
         public Task<Teams> GetTeamByIdAsync(int id);

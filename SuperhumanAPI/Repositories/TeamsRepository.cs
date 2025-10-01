@@ -6,7 +6,7 @@ using SuperhumanAPI.Models;
 
 namespace SuperhumanAPI.Repositories
 {
-    public class TeamsRepository : ITeams
+    public class TeamsRepository : ITeamsRepository
     {
         private readonly TeamContext _context;
         public TeamsRepository(TeamContext context)
@@ -19,7 +19,7 @@ namespace SuperhumanAPI.Repositories
             _context.Teams.Add(team);
             try
             {
-               await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
             {
@@ -40,10 +40,10 @@ namespace SuperhumanAPI.Repositories
 
         public async Task<PagedResult<Teams>> GetAllActiveTeamsAsync(int pageNumber, int pageSize)
         {
-           var teams = await _context.Teams
-                .FromSqlInterpolated($"EXEC GetTeamRecords {pageNumber}, {pageSize}")
-                .AsNoTracking()
-                .ToListAsync();
+            var teams = await _context.Teams
+                 .FromSqlInterpolated($"EXEC GetTeamRecords {pageNumber}, {pageSize}")
+                 .AsNoTracking()
+                 .ToListAsync();
 
             var totalCount = await _context.Teams.CountAsync();
 
@@ -81,3 +81,4 @@ namespace SuperhumanAPI.Repositories
             }
         }
     }
+}
