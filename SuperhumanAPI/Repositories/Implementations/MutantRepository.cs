@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SuperhumanAPI.Data;
 using SuperhumanAPI.Models;
+using SuperhumanAPI.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SuperhumanAPI.Repositories
+namespace SuperhumanAPI.Repositories.Implementations
 {
     public class MutantRepository : IMutantRepository
     {

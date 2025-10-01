@@ -4,8 +4,9 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SuperhumanAPI.Data;
 using SuperhumanAPI.Models;
+using SuperhumanAPI.Repositories.Interfaces;
 
-namespace SuperhumanAPI.Repositories
+namespace SuperhumanAPI.Repositories.Implementations
 {
     public class SuperhumanRepository : ISuperhumanRepository
     {

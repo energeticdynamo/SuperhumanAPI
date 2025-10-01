@@ -1,6 +1,6 @@
 ﻿using SuperhumanAPI.Models;
 
-namespace SuperhumanAPI.Repositories
+namespace SuperhumanAPI.Repositories.Interfaces
 {
     public interface ITeamsRepository
     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SuperhumanAPI.Repositories;
+using SuperhumanAPI.Repositories.Implementations;
+using SuperhumanAPI.Repositories.Interfaces;
 
 namespace SuperhumanAPI.Data
 {

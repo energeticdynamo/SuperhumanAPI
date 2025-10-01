@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SuperhumanAPI.Data;
-using SuperhumanAPI.Repositories;
+using SuperhumanAPI.Repositories.Implementations;
+using SuperhumanAPI.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

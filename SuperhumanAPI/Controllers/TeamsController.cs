@@ -1,6 +1,6 @@
 ﻿using SuperhumanAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using SuperhumanAPI.Repositories;
+using SuperhumanAPI.Repositories.Interfaces;
 
 namespace SuperhumanAPI.Controllers
 {
