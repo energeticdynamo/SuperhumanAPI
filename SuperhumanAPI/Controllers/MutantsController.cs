@@ -4,7 +4,7 @@ using SuperhumanAPI.Repositories.Interfaces;
 
 namespace SuperhumanAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("SuperhumanAPI/[controller]")]
     [ApiController]
     public class MutantsController : ControllerBase
     {
