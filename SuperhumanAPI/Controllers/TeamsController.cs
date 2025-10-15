@@ -33,6 +33,12 @@ namespace SuperhumanAPI.Controllers
             return Ok(team);
         }
 
+        [HttpGet("former")]
+        public async Task<ActionResult<IEnumerable<Teams>>> GetAllTeamsFormerAsync()
+        {
+            return Ok(await _teamsRepository.GetAllTeamsAsync());
+        }
+
         [HttpPost]
         public async Task<ActionResult<Teams>> CreateTeam(Teams team)
         {
