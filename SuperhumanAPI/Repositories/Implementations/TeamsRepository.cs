@@ -51,6 +51,15 @@ namespace SuperhumanAPI.Repositories.Implementations
             return new PagedResult<Teams> { Items = teams, TotalCount = totalCount };
         }
 
+        public async Task<IEnumerable<Teams>> GetAllTeamsAsync()
+        {
+            var teams = await _context.Teams
+                .FromSqlRaw("EXEC GetAllActiveTeams")
+                .AsNoTracking()
+                .ToListAsync();
+
+            return teams;
+        }
 
         public async Task<Teams> GetTeamByIdAsync(int id)
         {
