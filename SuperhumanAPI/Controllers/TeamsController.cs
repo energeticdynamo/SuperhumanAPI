@@ -34,7 +34,7 @@ namespace SuperhumanAPI.Controllers
         }
 
         [HttpGet("former")]
-        public async Task<ActionResult<Teams>> GetAllTeamsFormerAsync()
+        public async Task<ActionResult<IEnumerable<Teams>>> GetAllTeamsFormerAsync()
         {
             return Ok(await _teamsRepository.GetAllTeamsAsync());
         }

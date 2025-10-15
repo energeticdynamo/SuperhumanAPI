@@ -53,12 +53,9 @@ namespace SuperhumanAPI.Repositories.Implementations
 
         public async Task<IEnumerable<Teams>> GetAllTeamsAsync()
         {
-            var teams = await _context.Teams
-                .FromSqlRaw("EXEC GetAllActiveTeams")
+            return await _context.Teams
                 .AsNoTracking()
                 .ToListAsync();
-
-            return teams;
         }
 
         public async Task<Teams> GetTeamByIdAsync(int id)
