@@ -1,11 +1,13 @@
-﻿using SuperhumanAPI.Models;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SuperhumanAPI.Models;
 using SuperhumanAPI.Repositories.Interfaces;
 
 namespace SuperhumanAPI.Controllers
 {
     [Route("SuperhumanAPI/[controller]")]
     [ApiController]
+    [Authorize]
     public class MutantsController : ControllerBase
     {
         private readonly IMutantRepository _mutantRepository;
