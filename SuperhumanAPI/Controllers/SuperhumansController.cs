@@ -1,11 +1,13 @@
 ﻿using SuperhumanAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using SuperhumanAPI.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SuperhumanAPI.Controllers
 {
     [Route("SuperhumanAPI/[controller]")]
     [ApiController]
+    [Authorize]
     public class SuperhumansController : ControllerBase
     {
         private readonly ISuperhumanRepository _superhumanRepository;
