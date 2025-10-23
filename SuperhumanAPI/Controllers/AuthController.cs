@@ -43,7 +43,7 @@ namespace SuperhumanAPI.Controllers
 
             var newUser = await _userRepository.AddUserAsync(user);
 
-            return Ok(new { user.UserId, user.Username });
+            return Ok(new { user.Id, user.Username });
         }
 
         [HttpPost("login")]
@@ -68,7 +68,7 @@ namespace SuperhumanAPI.Controllers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-                new Claim("userId", user.UserId.ToString()),
+                new Claim("userId", user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
