@@ -56,13 +56,12 @@ namespace SuperhumanAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteMutant(int id)
         {
-            var mutant = await _mutantRepository.GetMutantByIdAsync(id);
-            if (mutant == null)
+            var deleted = await _mutantRepository.DeleteMutantByMutantIdAsync(id);
+            if (!deleted)
             {
                 return NotFound();
             }
-            
-            await _mutantRepository.DeleteMutantByMutantIdAsync(id);            
+
             return NoContent();
         }
 

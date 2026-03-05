@@ -21,6 +21,13 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 builder.Services.AddControllers();
 
+// Register Redis distributed cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = configuration.GetConnectionString("Redis");
+    options.InstanceName = "SuperhumanAPI_";
+});
+
 // Register DbContexts
 builder.Services.AddDbContext<MutantContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -43,6 +50,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 // Add Swagger/OpenAPI support
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add SignalR
+builder.Services.AddSignalR();
 
 //Add Authentication services
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -72,5 +82,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// Map SignalR hub
+app.MapHub<SuperhumanAPI.Hubs.SuperhumanHub>("/hubs/superhuman");
 
 app.Run();
