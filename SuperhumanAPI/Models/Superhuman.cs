@@ -20,5 +20,7 @@ namespace SuperhumanAPI.Models
         public int? TeamId { get; set; }
         public string? TeamName { get; set; } = string.Empty;
         public bool? IsTeamLeader { get; set; }
+        public string? CreatedBy { get; set; } = string.Empty;
+        public DateTime CreatedDate { get; set; }
     }
 }

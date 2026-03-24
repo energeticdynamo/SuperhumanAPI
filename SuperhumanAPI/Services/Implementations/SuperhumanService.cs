@@ -5,6 +5,8 @@ using SuperhumanAPI.Data;
 using SuperhumanAPI.Models;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Writers;
+using System.Security.Claims;
+
 namespace SuperhumanAPI.Services.Implementations
 {
     public class SuperhumanService : ISuperhumanService
@@ -12,12 +14,17 @@ namespace SuperhumanAPI.Services.Implementations
         private readonly ISuperhumanRepository _superhumanRepository;
         private readonly IMutantRepository _mutantRepository;
         private readonly ITeamsRepository _teamsRepository;
+        private readonly IHttpContextAccessor _httpContextAccesses;
 
-        public SuperhumanService(ISuperhumanRepository superhumanRepository, IMutantRepository mutantRepository, ITeamsRepository teamsRepository)
+        public SuperhumanService(ISuperhumanRepository superhumanRepository, 
+            IMutantRepository mutantRepository, 
+            ITeamsRepository teamsRepository,
+            IHttpContextAccessor httpContextAccessor)
         {
             _superhumanRepository = superhumanRepository;
             _mutantRepository = mutantRepository;
             _teamsRepository = teamsRepository;
+            _httpContextAccesses = httpContextAccessor;
         }
 
         public async Task<List<string>> GetTopTierHeroNamesAsync()
@@ -33,7 +40,7 @@ namespace SuperhumanAPI.Services.Implementations
         public async Task AddHeroToTeamAsync(Superhuman newHero)
         {
             // 1. If the hero isn't joining a team, just add them and exit
-            if (newHero.TeamId == null)
+            if (newHero.TeamId is null)
             {
                 await _superhumanRepository.AddSuperhumanAsync(newHero);
                 return;
@@ -69,23 +76,39 @@ namespace SuperhumanAPI.Services.Implementations
 
         public async Task OverPoweredValidation(Superhuman newHero)
         {            
-            if (newHero.Ranking == 10 && !string.IsNullOrEmpty(newHero.SecondaryPower))
+            if (newHero.Ranking is 10 && newHero.SecondaryPower is not (null or ""))
             {
                 throw new InvalidOperationException($"{newHero.CodeName ?? newHero.FirstName} " +
                     $"is too powerful to have a secondary power.");
             }
         }
 
-        //Check to see if superhuman.IsLeader is true if it is then save the new information using CodeName
+        
         public async Task AddSuperhumanWithLeaderAsync(Superhuman superhuman)
         {
-            if (superhuman.IsTeamLeader != null && superhuman.IsTeamLeader == true)
+            await _superhumanRepository.AddSuperhumanAsync(superhuman);
+
+            if (superhuman.IsTeamLeader is true)
             {
-                var teamLeaderName = superhuman.CodeName ?? ($"{ superhuman.FirstName} {superhuman.LastName}");
-                Teams currentTeam = await _teamsRepository.GetTeamByIdAsync((int)superhuman.TeamId);
-                currentTeam.TeamLeader = teamLeaderName;
+                if (superhuman.TeamId is not int teamId)
+                {
+                    throw new InvalidOperationException("A team leader must be assigned to a team.");
+                }
+
+                var currentTeam = await _teamsRepository.GetTeamByIdAsync(teamId);
+                currentTeam.TeamLeader = superhuman.CodeName ?? $"{superhuman.FirstName} {superhuman.LastName}";
                 await _teamsRepository.UpdateTeamAsync(currentTeam);
             }
+        }
+
+        public async Task AddSuperhumanWithAuditAsync(Superhuman superhuman)
+        {
+            var currentUserName = _httpContextAccesses.HttpContext?.User?.Identity?.Name ?? "System_Auto";
+
+            superhuman.CreatedBy = currentUserName;
+            superhuman.CreatedDate = DateTime.UtcNow;
+
+            await AddSuperhumanWithLeaderAsync (superhuman);
         }
     }
 }
