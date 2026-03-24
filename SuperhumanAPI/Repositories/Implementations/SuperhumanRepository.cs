@@ -115,7 +115,7 @@ namespace SuperhumanAPI.Repositories.Implementations
 
         public async Task<Superhuman> GetSuperhumanByIdAsync(int id)
         {
-            var superhuman = new Superhuman();
+            Superhuman? superhuman = null;
             var connectionString = _context.Database.GetConnectionString();
 
             using (var connection = new SqlConnection(connectionString))
@@ -129,7 +129,7 @@ namespace SuperhumanAPI.Repositories.Implementations
 
                     using (var reader = await command.ExecuteReaderAsync())
                     {
-                        while (await reader.ReadAsync())
+                        if (await reader.ReadAsync())
                         {
                             superhuman = new Superhuman
                             {
@@ -145,6 +145,11 @@ namespace SuperhumanAPI.Repositories.Implementations
                         }
                     }
                 }
+            }
+
+            if (superhuman == null)
+            {
+                throw new NullReferenceException($"Superhuman with ID {id} not found.");
             }
 
             return superhuman;

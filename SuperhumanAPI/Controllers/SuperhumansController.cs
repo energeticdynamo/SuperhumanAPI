@@ -1,6 +1,7 @@
 ﻿using SuperhumanAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using SuperhumanAPI.Repositories.Interfaces;
+using SuperhumanAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
 namespace SuperhumanAPI.Controllers
@@ -11,10 +12,12 @@ namespace SuperhumanAPI.Controllers
     public class SuperhumansController : ControllerBase
     {
         private readonly ISuperhumanRepository _superhumanRepository;
+        private readonly ISuperhumanService _superhumanService;
 
-        public SuperhumansController(ISuperhumanRepository superhumanRepository)
+        public SuperhumansController(ISuperhumanRepository superhumanRepository, ISuperhumanService superhumanService)
         {
             _superhumanRepository = superhumanRepository;
+            _superhumanService = superhumanService;
         }
 
         [HttpGet]
@@ -90,6 +93,13 @@ namespace SuperhumanAPI.Controllers
             }
             await _superhumanRepository.UpdateSuperhumanAsync(superhuman);
             return CreatedAtAction(nameof(GetSuperhumanById), new { id = superhuman.SuperhumanId }, superhuman);
+        }
+
+        [HttpGet("top-tier-heroes")]
+        public async Task<ActionResult> GetTopTierHeros()
+        {
+            var topTierHeroes = await _superhumanService.GetTopTierHeroNamesAsync();
+            return Ok(topTierHeroes);
         }
     }
 }

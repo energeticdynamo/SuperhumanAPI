@@ -79,6 +79,12 @@ namespace SuperhumanAPI.Repositories.Implementations
                 throw new InvalidOperationException("Error updating mutant in the database.", ex);
             }
         }
-        
+
+        public async Task<bool> DoesMutantExistAsync(string firstName, string lastName)
+        {
+            return await _context.Mutants.AnyAsync(m =>
+                m.FirstName == firstName && m.LastName == lastName);
+        }
+
     }
 }

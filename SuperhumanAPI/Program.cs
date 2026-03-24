@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using SuperhumanAPI.Data;
 using SuperhumanAPI.Repositories.Implementations;
 using SuperhumanAPI.Repositories.Interfaces;
+using SuperhumanAPI.Services.Interfaces;
+using SuperhumanAPI.Services.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -46,6 +48,7 @@ builder.Services.AddScoped<IMutantRepository, MutantRepository>();
 builder.Services.AddScoped<ITeamsRepository, TeamsRepository>();
 builder.Services.AddScoped<ICosmicBeingRepository, CosmicBeingRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISuperhumanService, SuperhumanService>();
 
 // Add Swagger/OpenAPI support
 builder.Services.AddEndpointsApiExplorer();

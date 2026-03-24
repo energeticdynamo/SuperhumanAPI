@@ -8,5 +8,6 @@ namespace SuperhumanAPI.Repositories.Interfaces
         public Task AddMutantAsync(Mutant mutant);
         public Task UpdateMutantAsync(Mutant mutant);
         public Task<bool> DeleteMutantByMutantIdAsync(int id);
+        public Task<bool> DoesMutantExistAsync(string firstName, string lastName);
     }
 }
