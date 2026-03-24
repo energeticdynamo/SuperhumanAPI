@@ -3,17 +3,21 @@ using SuperhumanAPI.Repositories.Interfaces;
 using SuperhumanAPI.Services.Interfaces;
 using SuperhumanAPI.Data;
 using SuperhumanAPI.Models;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Writers;
 namespace SuperhumanAPI.Services.Implementations
 {
     public class SuperhumanService : ISuperhumanService
     {
         private readonly ISuperhumanRepository _superhumanRepository;
         private readonly IMutantRepository _mutantRepository;
+        private readonly ITeamsRepository _teamsRepository;
 
-        public SuperhumanService(ISuperhumanRepository superhumanRepository, IMutantRepository mutantRepository)
+        public SuperhumanService(ISuperhumanRepository superhumanRepository, IMutantRepository mutantRepository, ITeamsRepository teamsRepository)
         {
             _superhumanRepository = superhumanRepository;
             _mutantRepository = mutantRepository;
+            _teamsRepository = teamsRepository;
         }
 
         public async Task<List<string>> GetTopTierHeroNamesAsync()
@@ -61,6 +65,27 @@ namespace SuperhumanAPI.Services.Implementations
             }
 
             await _superhumanRepository.AddSuperhumanAsync(newHero);
+        }
+
+        public async Task OverPoweredValidation(Superhuman newHero)
+        {            
+            if (newHero.Ranking == 10 && !string.IsNullOrEmpty(newHero.SecondaryPower))
+            {
+                throw new InvalidOperationException($"{newHero.CodeName ?? newHero.FirstName} " +
+                    $"is too powerful to have a secondary power.");
+            }
+        }
+
+        //Check to see if superhuman.IsLeader is true if it is then save the new information using CodeName
+        public async Task AddSuperhumanWithLeaderAsync(Superhuman superhuman)
+        {
+            if (superhuman.IsTeamLeader != null && superhuman.IsTeamLeader == true)
+            {
+                var teamLeaderName = superhuman.CodeName ?? ($"{ superhuman.FirstName} {superhuman.LastName}");
+                Teams currentTeam = await _teamsRepository.GetTeamByIdAsync((int)superhuman.TeamId);
+                currentTeam.TeamLeader = teamLeaderName;
+                await _teamsRepository.UpdateTeamAsync(currentTeam);
+            }
         }
     }
 }

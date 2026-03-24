@@ -19,5 +19,6 @@ namespace SuperhumanAPI.Models
         public int? Ranking { get; set; }
         public int? TeamId { get; set; }
         public string? TeamName { get; set; } = string.Empty;
+        public bool? IsTeamLeader { get; set; }
     }
 }
